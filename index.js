@@ -17,16 +17,15 @@ cloudinary.config({
   });
 app.use(morgan("common"));
 
-
 const corsOptions = {
-    origin: ['https://rocknwoods.website','https://storage.job4jobless.com','http://localhost:3000'], // Set the allowed origin (the URL of your React frontend)
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Specify allowed HTTP methods
-    preflightContinue: false, // Disable preflight requests
-    optionsSuccessStatus: 204, // Set the status code for successful preflight requests
-    allowedHeaders: 'Content-Type, Authorization', // Specify allowed headers
-    credential:true
-  };
-  
+    credentials: true,
+    origin: [
+        "http://localhost:3000",
+        "https://rocknwoods.website",
+        "https://job4jobless.com",
+    ],
+};
+
 app.use(cors(corsOptions));
 
 app.get("/test", (req, res) => {
@@ -35,16 +34,7 @@ app.get("/test", (req, res) => {
 app.use("/api", apiset);
 ;
 dbconnect();
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/storage.job4jobless.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/storage.job4jobless.com/fullchain.pem', 'utf8');
-const credentials = {
-  key: privateKey,
-  cert: certificate,
-};
 
-// Create an HTTPS server using Express app and SSL credentials
-const httpsServer = https.createServer(app);
-
-httpsServer.listen(4000, () => {
+app.listen(4000, () => {
     console.log("listening on port:4000");
 });
